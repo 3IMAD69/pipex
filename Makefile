@@ -1,7 +1,33 @@
 
+SRCM	= main.c pipex_utils.c
+
+OBJM	= ${SRCM:.c=.o}
+
+CFLAGS	= -Wall -Werror -Wextra #-ggdb3 -fsanitize=address 
+CC		= cc
+
+NAME	= pipex
+LIBFTA 	= ./libft/libft.a
 
 
-all : 
-	@cc main.c pipex_utils.c -g -fsanitize=address libft/ft_strnstr.c libft/ft_strncmp.c libft/ft_memmove.c libft/ft_split.c libft/ft_strdup.c  libft/ft_strlen.c libft/ft_strjoin.c libft/ft_isalpha.c libft/ft_memcpy.c \
-	libft/ft_strlcpy.c libft/ft_strlcat.c \
-	-g -fsanitize=address && ./a.out infile "cat" "wc -l" outfile
+all : ${NAME}
+
+
+${LIBFTA} : 
+	make -C libft
+
+${NAME}:	${OBJM} ${LIBFTA}
+	${CC} ${CFLAGS} ${OBJM} ${LIBFTA} ${LINKS} -o ${NAME}
+
+
+clean:
+	rm -f ${OBJM} 
+
+fclean:		clean
+	rm -f ${NAME} 
+
+re:			fclean all
+
+.SECONDARY : ${OBJM}
+.PHONY: all bonus clean fclean re
+
