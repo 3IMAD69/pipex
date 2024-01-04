@@ -48,7 +48,7 @@ char *get_valid_path(char **paths, char *cmd)
     return (NULL);
 }
 
-void free_tab(char **tab)
+int free_tab(char **tab)
 {
     int i;
     
@@ -56,5 +56,5 @@ void free_tab(char **tab)
     while (tab[i] != NULL)
         free(tab[i++]);
     free(tab);
+    return (1);
 }
-

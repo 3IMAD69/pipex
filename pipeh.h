@@ -6,7 +6,7 @@
 /*   By: idhaimy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 09:46:33 by idhaimy           #+#    #+#             */
-/*   Updated: 2024/01/03 11:55:28 by idhaimy          ###   ########.fr       */
+/*   Updated: 2024/01/03 20:03:33 by idhaimy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,6 @@
 
 char **get_path_from_env(char **env);
 char *get_valid_path(char **paths, char *cmd);
-void free_tab(char **tab);
+int free_tab(char **tab);
 
 #endif

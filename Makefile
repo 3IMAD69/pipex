@@ -1,9 +1,9 @@
 
-SRCM	= main.c pipex_utils.c
+SRCM	= pipex.c pipex_utils.c
 
 OBJM	= ${SRCM:.c=.o}
 
-CFLAGS	= -Wall -Werror -Wextra #-ggdb3 -fsanitize=address 
+CFLAGS	= -Wall -Werror -Wextra -g -fsanitize=address 
 CC		= cc
 
 NAME	= pipex
@@ -28,6 +28,9 @@ fclean:		clean
 
 re:			fclean all
 
+run : 
+	./pipex infile "ls -l" "wc -l" outfile
+	@cat outfile
 .SECONDARY : ${OBJM}
 .PHONY: all bonus clean fclean re
 
