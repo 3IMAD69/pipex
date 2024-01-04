@@ -1,40 +1,38 @@
-
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: idhaimy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 10:34:18 by idhaimy           #+#    #+#             */
-/*   Updated: 2024/01/01 11:21:28 by idhaimy          ###   ########.fr       */
+/*   Updated: 2024/01/04 16:29:03 by idhaimy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipeh.h"
 
-int	print_error(char *str)
+void	handle_command_helper(char **cmds, char **env)
 {
-	write(2, str, ft_strlen(str));
-	exit(1);
-}
+	char	**paths;
+	char	*workin_path;
 
-void	execute_command(char *path, char **args,char **env)
-{
-	if (execve(path, args, env) == -1)
-	{
-		free_tab(args);
-		print_error("Command not found");
-	}
+	paths = get_path_from_env(env);
+	if (paths == NULL && free_tab(cmds))
+		print_error("PATH ENV NOT FOUND");
 	else
-		free_tab(args);
-	exit(0);
+	{
+		workin_path = get_valid_path(paths, cmds[0]);
+		if (workin_path == NULL && free_tab(cmds))
+			print_error("Command not found");
+		execute_command(workin_path, cmds, env);
+		free(workin_path);
+		free_tab(paths);
+	}
 }
 
 void	handle_command(char *arg, char **env)
 {
-	char	**paths;
-	char	*workin_path;
 	char	**cmds;
 
 	cmds = ft_split(arg, ' ');
@@ -43,22 +41,10 @@ void	handle_command(char *arg, char **env)
 		if (access(cmds[0], X_OK) == -1 && free_tab(cmds))
 			print_error("no such file or directory");
 		else
-			execute_command(cmds[0], cmds,env);
+			execute_command(cmds[0], cmds, env);
 	}
 	else
-	{
-		paths = get_path_from_env(env);
-		if (paths == NULL && free_tab(cmds))
-			print_error("PATH ENV NOT FOUND");
-		else
-		{
-			workin_path = get_valid_path(paths, cmds[0]);
-			if (workin_path == NULL && free_tab(cmds))
-				print_error("Command not found");
-			execute_command(workin_path, cmds,env);
-			free_tab(paths);
-		}
-	}
+		handle_command_helper(cmds, env);
 }
 
 void	child_func(int *fd_child, char **av, char **env)

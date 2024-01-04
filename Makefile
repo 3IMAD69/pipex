@@ -1,5 +1,5 @@
 
-SRCM	= pipex.c pipex_utils.c
+SRCM	= pipex.c pipex_utils.c pipex_error.c
 
 OBJM	= ${SRCM:.c=.o}
 
