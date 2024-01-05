@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipex_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: idhaimy <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/05 11:16:54 by idhaimy           #+#    #+#             */
+/*   Updated: 2024/01/05 11:16:56 by idhaimy          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "pipeh.h"
 
 char	**get_path_from_env(char **env)
@@ -68,5 +80,6 @@ void	execute_command(char *path, char **args, char **env)
 	}
 	else
 		free_tab(args);
+	ft_putstr_fd("exiting after executing !!\n",2);
 	exit(0);
 }

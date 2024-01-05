@@ -6,14 +6,14 @@
 /*   By: idhaimy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 09:46:33 by idhaimy           #+#    #+#             */
-/*   Updated: 2024/01/04 16:33:53 by idhaimy          ###   ########.fr       */
+/*   Updated: 2024/01/05 09:10:46 by idhaimy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEH_H
 # define PIPEH_H
 
-# include "libft/libft.h"
+# include "../libft/libft.h"
 # include <fcntl.h>
 # include <stdio.h>
 # include <stdlib.h>

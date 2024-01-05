@@ -6,7 +6,7 @@
 /*   By: idhaimy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 10:34:18 by idhaimy           #+#    #+#             */
-/*   Updated: 2024/01/04 16:29:03 by idhaimy          ###   ########.fr       */
+/*   Updated: 2024/01/05 12:34:59 by idhaimy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	handle_command(char *arg, char **env)
 void	child_func(int *fd_child, char **av, char **env)
 {
 	int	input_fd;
-
+	
 	input_fd = open(av[1], O_RDONLY);
 	close(fd_child[0]);
 	if (input_fd == -1 && close(fd_child[1]))
@@ -71,11 +71,11 @@ void	parent_func(int *fd_parent, char **av, char **env)
 	close(fd_parent[1]);
 	if (outfile_fd == -1)
 		print_error("Error opening the input file!");
-	if (dup2(outfile_fd, STDOUT_FILENO) == -1)
+	if (dup2(outfile_fd, STDOUT_FILENO) == -1 && close(fd_parent[0]))
 		print_error("Error dup2 first parent dup2");
-	if (dup2(fd_parent[0], STDIN_FILENO) == -1)
+	if (dup2(fd_parent[0], STDIN_FILENO) == -1 && close(fd_parent[0]))
 		print_error("Error dup2 second parent dup2");
-	close(fd_parent[1]);
+	close(fd_parent[0]);
 	handle_command(av[3], env);
 }
 
@@ -84,8 +84,6 @@ int	main(int argc, char **argv, char **env)
 	int		fd[2];
 	pid_t	pid;
 
-	// 0 read
-	// 1 write
 	if (argc != 5)
 		print_error("Invalid Number of Argument !!");
 	if (pipe(fd) == -1)
@@ -96,6 +94,9 @@ int	main(int argc, char **argv, char **env)
 	if (pid == 0)
 		child_func(fd, argv, env);
 	else
+	{
+		waitpid(pid,NULL,0);
 		parent_func(fd, argv, env);
+	}
 	return (0);
 }
