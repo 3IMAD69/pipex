@@ -6,7 +6,7 @@
 /*   By: idhaimy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 10:34:18 by idhaimy           #+#    #+#             */
-/*   Updated: 2024/01/05 12:34:59 by idhaimy          ###   ########.fr       */
+/*   Updated: 2024/01/05 20:08:18 by idhaimy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	handle_command(char *arg, char **env)
 		handle_command_helper(cmds, env);
 }
 
-void	child_func(int *fd_child, char **av, char **env)
+void	child1_func(int *fd_child, char **av, char **env)
 {
 	int	input_fd;
 	
@@ -63,40 +63,44 @@ void	child_func(int *fd_child, char **av, char **env)
 	handle_command(av[2], env);
 }
 
-void	parent_func(int *fd_parent, char **av, char **env)
+void	child2_func(int *fd_child2, char **av, char **env)
 {
 	int	outfile_fd;
-
 	outfile_fd = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	close(fd_parent[1]);
+	close(fd_child2[1]);
 	if (outfile_fd == -1)
 		print_error("Error opening the input file!");
-	if (dup2(outfile_fd, STDOUT_FILENO) == -1 && close(fd_parent[0]))
+	if (dup2(outfile_fd, STDOUT_FILENO) == -1 && close(fd_child2[0]))
 		print_error("Error dup2 first parent dup2");
-	if (dup2(fd_parent[0], STDIN_FILENO) == -1 && close(fd_parent[0]))
+	if (dup2(fd_child2[0], STDIN_FILENO) == -1 && close(fd_child2[0]))
 		print_error("Error dup2 second parent dup2");
-	close(fd_parent[0]);
+	close(fd_child2[0]);
 	handle_command(av[3], env);
 }
 
 int	main(int argc, char **argv, char **env)
 {
 	int		fd[2];
-	pid_t	pid;
+	pid_t	pid1;
+	pid_t	pid2;
 
 	if (argc != 5)
 		print_error("Invalid Number of Argument !!");
 	if (pipe(fd) == -1)
 		print_error("Error creating them pipe");
-	pid = fork();
-	if (pid == -1)
+	pid1 = fork();
+	if (pid1 == -1)
 		print_error("Error while forking !!");
-	if (pid == 0)
-		child_func(fd, argv, env);
-	else
-	{
-		waitpid(pid,NULL,0);
-		parent_func(fd, argv, env);
-	}
+	if (pid1 == 0)
+		child1_func(fd, argv, env);
+	pid2 = fork();
+	if (pid2 == -1)
+		print_error("Error while forking !!");
+	if (pid2 == 0)
+		child2_func(fd,argv,env);
+	close(fd[0]);
+	close(fd[1]);
+	waitpid(pid1, NULL, 0);
+	waitpid(pid2,NULL,0);
 	return (0);
 }

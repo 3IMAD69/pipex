@@ -39,8 +39,13 @@ fclean:		clean
 re:			fclean all
 
 run : 
-	./pipex_bonus infile "cat" "grep shadow" "ls -l" "wc -l" outfile
+	./pipex /dev/random "cat" "head -n 5" outfile
 	@cat outfile
+
+random : 
+	< /dev/random cat | head -n 5 > outfile
+	@cat outfile
+
 .SECONDARY : ${OBJM}
 .PHONY: all bonus clean fclean re
 
