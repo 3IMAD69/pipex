@@ -1,1 +1,21 @@
-Makefile
+total 208
+drwxr-xr-x  20 idhaimy  candidates    680 Jan  6 20:54 .
+drwx------  24 idhaimy  candidates    816 Jan  6 17:03 ..
+-rw-r--r--@  1 idhaimy  candidates   8196 Jan  6 19:13 .DS_Store
+drwxr-xr-x  15 idhaimy  candidates    510 Jan  6 12:38 .git
+-rw-r--r--   1 idhaimy  candidates    430 Jan  2 12:30 .gitignore
+drwxr-xr-x   3 idhaimy  candidates    102 Jan  2 20:55 .vscode
+-rw-r--r--   1 idhaimy  candidates   1068 Jan  6 11:28 Makefile
+drwxr-xr-x   7 idhaimy  candidates    238 Dec 30 12:06 get_next_line
+-rw-r--r--   1 idhaimy  candidates    992 Jan  5 11:23 infile
+drwxr-xr-x  73 idhaimy  candidates   2482 Jan  6 17:33 libft
+drwxr-xr-x   6 idhaimy  candidates    204 Jan  6 17:12 mandatory
+-rw-r--r--   1 idhaimy  candidates      0 Jan  6 20:54 outfile
+-rw-r--r--   1 idhaimy  candidates   1336 Jan  5 11:18 pipeh_bonus.h
+-rwxr-xr-x   1 idhaimy  candidates  29632 Jan  6 20:54 pipex_bonus
+-rw-r--r--   1 idhaimy  candidates   3715 Jan  6 20:54 pipex_bonus.c
+-rw-r--r--   1 idhaimy  candidates  17384 Jan  6 20:54 pipex_bonus.o
+-rw-r--r--   1 idhaimy  candidates    991 Jan  5 09:44 pipex_error_bonus.c
+-rw-r--r--   1 idhaimy  candidates   2752 Jan  6 20:54 pipex_error_bonus.o
+-rw-r--r--   1 idhaimy  candidates   2017 Jan  5 11:17 pipex_utils_bonus.c
+-rw-r--r--   1 idhaimy  candidates   7940 Jan  6 20:54 pipex_utils_bonus.o
