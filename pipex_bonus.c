@@ -6,7 +6,7 @@
 /*   By: idhaimy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 10:34:18 by idhaimy           #+#    #+#             */
-/*   Updated: 2024/01/05 13:06:25 by idhaimy          ###   ########.fr       */
+/*   Updated: 2024/01/06 12:18:06 by idhaimy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,11 @@ void	handle_command(char *arg, char **env)
 		handle_command_helper(cmds, env);
 }
 
-void	handle_mutiple_pipes(char *cmd, char **env)
+void	handle_mutiple_pipes(char *cmd, char **env,int input_fd,int outfile_fd)
 {
 	int		fd[2];
 	pid_t	pid;
-
+	
 	if (pipe(fd) == -1)
 		print_error("Error creating them pipe");
 	pid = fork();
@@ -63,10 +63,12 @@ void	handle_mutiple_pipes(char *cmd, char **env)
 		if (dup2(fd[1], STDOUT_FILENO) == -1 && close(fd[1]))
 			print_error("Error dup2");
 		close(fd[1]);
+		close(input_fd);
+		close(outfile_fd);
 		handle_command(cmd, env);
 	}
 	else
-	{
+	{	
 		close(fd[1]);
 		if (dup2(fd[0], STDIN_FILENO) == -1 && close(fd[0]))
 			print_error("Error dup2 second parent dup2");
@@ -89,10 +91,12 @@ int	main(int argc, char **argv, char **env)
 		print_error("Error opening in/out  file!");
 	dup2(input_fd, STDIN_FILENO);
 	while (++i < argc - 2)
-		handle_mutiple_pipes(argv[i], env);
+		handle_mutiple_pipes(argv[i], env,input_fd,outfile_fd);
 	dup2(outfile_fd, STDOUT_FILENO);
-	handle_command(argv[argc - 2], env);
 	close(input_fd);
 	close(outfile_fd);
+	while (wait(NULL) > 0)
+		;
+	handle_command(argv[argc - 2], env);
 	return (0);
 }

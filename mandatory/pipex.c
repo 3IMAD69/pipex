@@ -6,7 +6,7 @@
 /*   By: idhaimy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 10:34:18 by idhaimy           #+#    #+#             */
-/*   Updated: 2024/01/05 20:08:18 by idhaimy          ###   ########.fr       */
+/*   Updated: 2024/01/06 11:36:21 by idhaimy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	handle_command(char *arg, char **env)
 void	child1_func(int *fd_child, char **av, char **env)
 {
 	int	input_fd;
-	
+
 	input_fd = open(av[1], O_RDONLY);
 	close(fd_child[0]);
 	if (input_fd == -1 && close(fd_child[1]))
@@ -66,6 +66,7 @@ void	child1_func(int *fd_child, char **av, char **env)
 void	child2_func(int *fd_child2, char **av, char **env)
 {
 	int	outfile_fd;
+
 	outfile_fd = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	close(fd_child2[1]);
 	if (outfile_fd == -1)
@@ -97,10 +98,10 @@ int	main(int argc, char **argv, char **env)
 	if (pid2 == -1)
 		print_error("Error while forking !!");
 	if (pid2 == 0)
-		child2_func(fd,argv,env);
+		child2_func(fd, argv, env);
 	close(fd[0]);
 	close(fd[1]);
 	waitpid(pid1, NULL, 0);
-	waitpid(pid2,NULL,0);
+	waitpid(pid2, NULL, 0);
 	return (0);
 }

@@ -38,12 +38,20 @@ fclean:		clean
 
 re:			fclean all
 
-run : 
+run : fclean bonus
+	./pipex_bonus /dev/random "cat" "head -n 5" "head -n 1" outfile
+	@cat outfile
+
+runmand : 
 	./pipex /dev/random "cat" "head -n 5" outfile
 	@cat outfile
 
+sleep : 
+	./pipex_bonus /dev/random "sleep 2" "ls -l"  "ls -la" outfile
+	@cat outfile
+
 random : 
-	< /dev/random cat | head -n 5 > outfile
+	< /dev/random cat | head -n 5 | head -n 1 > outfile
 	@cat outfile
 
 .SECONDARY : ${OBJM}
