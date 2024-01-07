@@ -6,7 +6,7 @@
 /*   By: idhaimy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 10:34:18 by idhaimy           #+#    #+#             */
-/*   Updated: 2024/01/07 18:53:53 by idhaimy          ###   ########.fr       */
+/*   Updated: 2024/01/07 20:15:42 by idhaimy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,7 @@ int	handle_here_doc(char **argv)
 	return (tmp_fd);
 }
 
-void	handle_mutiple_pipes(char *cmd, char **env, int input_fd,
-		int outfile_fd)
+void	handle_mutiple_pipes(char *cmd, char **env, int input_fd, int outfile_fd)
 {
 	int		fd[2];
 	pid_t	pid;
@@ -97,6 +96,7 @@ void	handle_mutiple_pipes(char *cmd, char **env, int input_fd,
 		close(input_fd);
 		close(outfile_fd);
 		handle_command(cmd, env);
+		
 	}
 	else
 	{
@@ -107,6 +107,37 @@ void	handle_mutiple_pipes(char *cmd, char **env, int input_fd,
 	}
 }
 
+void handle_last_command(char *cmd, char **env,int input_fd, int outfile_fd)
+{
+	int		fd[2];
+	pid_t	pid;
+
+	if (pipe(fd) == -1)
+		print_error("Error creating them pipe");
+	pid = fork();
+	if (pid == -1)
+		print_error("Error while forking !!");
+	if (pid == 0)
+	{
+		close(fd[0]);
+		if (dup2(outfile_fd, STDOUT_FILENO) == -1 && close(fd[1]))
+			print_error("Error dup2");
+		close(fd[1]);
+		close(input_fd);
+		close(outfile_fd);
+		handle_command(cmd, env);
+		
+	}
+	else
+	{
+		close(fd[1]);
+		if (dup2(fd[0], STDIN_FILENO) == -1 && close(fd[0]))
+			print_error("Error dup2 second parent dup2");
+		close(input_fd);
+		close(outfile_fd);
+		close(fd[0]);
+	}
+}
 int	main(int argc, char **argv, char **env)
 {
 	int	i;
@@ -133,14 +164,19 @@ int	main(int argc, char **argv, char **env)
 	if (input_fd == -1 || outfile_fd == -1)
 		print_error("Error opening in/out  file!");
 	dup2(input_fd, STDIN_FILENO);
-	while (++i < argc - 2)
-		handle_mutiple_pipes(argv[i], env, input_fd, outfile_fd);
-	dup2(outfile_fd, STDOUT_FILENO);
-	close(input_fd);
-	close(outfile_fd);
+	while (++i < argc - 1)
+	{
+		if (i == argc - 2)
+			handle_last_command(argv[i],env,input_fd,outfile_fd);
+		else
+			handle_mutiple_pipes(argv[i], env,input_fd,outfile_fd);
+	}
+	//dup2(outfile_fd, STDOUT_FILENO);
+	// close(input_fd);
+	// close(outfile_fd);
 	while (wait(NULL) > 0)
 		;
 	unlink("tmp");
-	handle_command(argv[argc - 2], env);
+	//handle_command(argv[argc - 2], env);
 	return (0);
 }
