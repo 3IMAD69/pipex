@@ -6,7 +6,7 @@
 /*   By: idhaimy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 10:34:18 by idhaimy           #+#    #+#             */
-/*   Updated: 2024/01/06 20:54:03 by idhaimy          ###   ########.fr       */
+/*   Updated: 2024/01/07 18:53:53 by idhaimy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,42 @@ void	handle_command(char *arg, char **env)
 		handle_command_helper(cmds, env);
 }
 
+int	handle_here_doc(char **argv)
+{
+	char	*buffer;
+	char	*tmp;
+	int		tmp_fd;
+
+	tmp_fd = open("tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (tmp_fd == -1)
+		print_error("Error opening tmp file !!");
+	while (1)
+	{
+		buffer = get_next_line(STDIN_FILENO);
+		if (buffer == NULL)
+			break;
+		tmp = ft_strtrim(buffer, "\n");
+		if (ft_strncmp(tmp, argv[2], ft_strlen(buffer)) == 0)
+		{
+			free(buffer);
+			break ;
+		}
+		ft_putstr_fd(buffer, tmp_fd);
+		free(buffer);
+	}
+	close(tmp_fd);
+	tmp_fd = open("tmp", O_RDONLY);
+	if (tmp_fd == -1)
+		print_error("Error reading tmp file !!");
+	return (tmp_fd);
+}
+
 void	handle_mutiple_pipes(char *cmd, char **env, int input_fd,
 		int outfile_fd)
 {
 	int		fd[2];
 	pid_t	pid;
 
-	// (void)input_fd;
 	if (pipe(fd) == -1)
 		print_error("Error creating them pipe");
 	pid = fork();
@@ -78,42 +107,12 @@ void	handle_mutiple_pipes(char *cmd, char **env, int input_fd,
 	}
 }
 
-int handle_here_doc(char **argv)
-{
-
-	char *buffer;
-	char *tmp;
-	int tmp_fd;
-	
-	tmp_fd = open("tmp", O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (tmp_fd == -1)
-		print_error("Error opening tmp file !!");
-	while(1)
-	{
-		buffer = get_next_line(STDIN_FILENO);
-		tmp = ft_strtrim(buffer, "\n");
-		if (ft_strncmp(tmp,argv[2],ft_strlen(buffer)) == 0)
-		{
-			free (buffer);
-			break;
-		}
-		ft_putstr_fd(buffer,tmp_fd);
-		free(buffer);
-	}
-	close(tmp_fd);
-	tmp_fd = open("tmp", O_RDONLY);
-	if (tmp_fd == -1)
-		print_error("Error reading tmp file !!");
-	return (tmp_fd);
-}
-
 int	main(int argc, char **argv, char **env)
 {
 	int	i;
 	int	input_fd;
 	int	outfile_fd;
 
-	input_fd = 0;
 	i = 1;
 	if (argc < 5)
 		print_error("Invalid Number of Argument !!");
@@ -122,16 +121,20 @@ int	main(int argc, char **argv, char **env)
 		if (argc < 6)
 			print_error("Invalid Number of Argument to use here_doc !");
 		input_fd = handle_here_doc(argv);
+		ft_putstr_fd(ft_itoa(input_fd), 2);
+		outfile_fd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
 		i = 2;
 	}
 	else
+	{
 		input_fd = open(argv[1], O_RDONLY);
-	outfile_fd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		outfile_fd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	}
 	if (input_fd == -1 || outfile_fd == -1)
 		print_error("Error opening in/out  file!");
 	dup2(input_fd, STDIN_FILENO);
 	while (++i < argc - 2)
-		handle_mutiple_pipes(argv[i], env,input_fd,outfile_fd);
+		handle_mutiple_pipes(argv[i], env, input_fd, outfile_fd);
 	dup2(outfile_fd, STDOUT_FILENO);
 	close(input_fd);
 	close(outfile_fd);

@@ -50,6 +50,9 @@ sleep :
 	./pipex_bonus /dev/random "sleep 2" "ls -l"  "ls -la" outfile
 	@cat outfile
 
+here :
+	./pipex_bonus here_doc end "cat" "head -n 5" outfile
+	@cat outfile
 random : 
 	< /dev/random cat | head -n 5 | head -n 1 > outfile
 	@cat outfile
