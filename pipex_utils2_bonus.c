@@ -6,7 +6,7 @@
 /*   By: idhaimy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 10:08:33 by idhaimy           #+#    #+#             */
-/*   Updated: 2024/01/08 10:11:20 by idhaimy          ###   ########.fr       */
+/*   Updated: 2024/01/08 11:24:50 by idhaimy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@ void	handle_command_helper(char **cmds, char **env)
 		if (workin_path == NULL && free_tab(cmds))
 			print_error("Command not found");
 		execute_command(workin_path, cmds, env);
-		free(workin_path);
-		free_tab(paths);
 	}
 }
 

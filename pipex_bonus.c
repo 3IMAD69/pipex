@@ -6,7 +6,7 @@
 /*   By: idhaimy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 10:34:18 by idhaimy           #+#    #+#             */
-/*   Updated: 2024/01/08 10:12:53 by idhaimy          ###   ########.fr       */
+/*   Updated: 2024/01/08 10:41:09 by idhaimy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,8 @@ int	main(int argc, char **argv, char **env)
 	i = main_helper(argc, argv, &input_fd, &outfile_fd);
 	if (input_fd == -1 || outfile_fd == -1)
 		print_error("Error opening in/out  file!");
-	dup2(input_fd, STDIN_FILENO);
+	if (dup2(input_fd, STDIN_FILENO) == -1)
+		print_error("Error dup2");
 	while (++i < argc - 1)
 	{
 		if (i == argc - 2)

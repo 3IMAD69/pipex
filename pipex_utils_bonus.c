@@ -6,7 +6,7 @@
 /*   By: idhaimy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 11:17:39 by idhaimy           #+#    #+#             */
-/*   Updated: 2024/01/05 11:17:45 by idhaimy          ###   ########.fr       */
+/*   Updated: 2024/01/08 11:25:28 by idhaimy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,12 @@ char	*get_valid_path(char **paths, char *cmd)
 	while (paths[i] != NULL)
 	{
 		tmp = join_strings(paths[i], "/", cmd);
-		if (access(tmp, X_OK) != -1)
+		if (access(tmp, X_OK) != -1 && free_tab(paths))
 			return (tmp);
 		free(tmp);
 		i++;
 	}
+	free_tab(paths);
 	return (NULL);
 }
 
@@ -75,10 +76,16 @@ void	execute_command(char *path, char **args, char **env)
 {
 	if (execve(path, args, env) == -1)
 	{
+		if (path != args[0])
+			free(path);
 		free_tab(args);
 		print_error("Command not found");
 	}
 	else
+	{
+		if (path != args[0])
+			free(path);
 		free_tab(args);
+	}
 	exit(0);
 }

@@ -2,6 +2,7 @@
     "files.associations": {
         "*.ejs": "html",
         "libft.h": "c",
-        "pipeh.h": "c"
+        "pipeh.h": "c",
+        "pipeh_bonus.h": "c"
     }
 }

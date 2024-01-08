@@ -58,9 +58,11 @@ sleep :
 here : fclean bonus
 	./pipex_bonus here_doc end "cat" "head -n 5" outfile
 	@cat outfile
+
 random : 
 	< /dev/random cat | head -n 5 | head -n 1 > outfile
 	@cat outfile
+
 
 .SECONDARY : ${OBJM}
 .PHONY: all bonus clean fclean re
