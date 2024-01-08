@@ -6,7 +6,7 @@
 /*   By: idhaimy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 10:34:18 by idhaimy           #+#    #+#             */
-/*   Updated: 2024/01/08 11:57:25 by idhaimy          ###   ########.fr       */
+/*   Updated: 2024/01/08 12:13:11 by idhaimy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ void	child1_func(int *fd_child, char **av, char **env)
 	if (dup2(fd_child[1], STDOUT_FILENO) == -1 && close(fd_child[1]))
 		print_error("Error dup2");
 	close(fd_child[1]);
+	close(input_fd);
 	handle_command(av[2], env);
 }
 
@@ -74,6 +75,7 @@ void	child2_func(int *fd_child2, char **av, char **env)
 	if (dup2(fd_child2[0], STDIN_FILENO) == -1 && close(fd_child2[0]))
 		print_error("Error dup2 second parent dup2");
 	close(fd_child2[0]);
+	close(outfile_fd);
 	handle_command(av[3], env);
 }
 
