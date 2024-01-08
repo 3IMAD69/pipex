@@ -1,7 +1,7 @@
 
 SRCM	= mandatory/pipex.c mandatory/pipex_utils.c mandatory/pipex_error.c
 
-SRCB	= pipex_bonus.c pipex_utils_bonus.c pipex_error_bonus.c
+SRCB	= pipex_bonus.c pipex_utils_bonus.c pipex_utils2_bonus.c pipex_error_bonus.c
 
 OBJM	= ${SRCM:.c=.o}
 
@@ -42,6 +42,11 @@ run : fclean bonus
 	./pipex_bonus /dev/random "cat" "head -n 5" "head -n 1" outfile
 	@cat outfile
 
+run2 : fclean bonus
+	./pipex_bonus infile "cat" "cat /dev/random" "head -n 5" "head -n 1" outfile
+	clear
+	@cat outfile
+
 runmand : 
 	./pipex /dev/random "cat" "head -n 5" outfile
 	@cat outfile
@@ -50,7 +55,7 @@ sleep :
 	./pipex_bonus /dev/random "sleep 2" "ls -l"  "ls -la" outfile
 	@cat outfile
 
-here :
+here : fclean bonus
 	./pipex_bonus here_doc end "cat" "head -n 5" outfile
 	@cat outfile
 random : 
