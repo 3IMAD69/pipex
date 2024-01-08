@@ -6,7 +6,7 @@
 /*   By: idhaimy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 10:34:18 by idhaimy           #+#    #+#             */
-/*   Updated: 2024/01/08 10:41:09 by idhaimy          ###   ########.fr       */
+/*   Updated: 2024/01/08 15:38:08 by idhaimy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,10 @@ void	handle_mutiple_pipes(char *cmd, char **env, int input_fd,
 	if (pid == 0)
 	{
 		close(fd[0]);
-		if (dup2(fd[1], STDOUT_FILENO) == -1 && close(fd[1]))
+		if (dup2(fd[1], STDOUT_FILENO) == -1 && close_fds(fd[1], input_fd,
+				outfile_fd))
 			print_error("Error dup2");
-		close(fd[1]);
-		close(input_fd);
-		close(outfile_fd);
+		close_fds(fd[1], input_fd, outfile_fd);
 		handle_command(cmd, env);
 	}
 	else
@@ -84,11 +83,10 @@ void	handle_last_command(char *cmd, char **env, int input_fd, int outfile_fd)
 	if (pid == 0)
 	{
 		close(fd[0]);
-		if (dup2(outfile_fd, STDOUT_FILENO) == -1 && close(fd[1]))
+		if (dup2(outfile_fd, STDOUT_FILENO) == -1 && close_fds(fd[1], input_fd,
+				outfile_fd))
 			print_error("Error dup2");
-		close(fd[1]);
-		close(input_fd);
-		close(outfile_fd);
+		close_fds(fd[1], input_fd, outfile_fd);
 		handle_command(cmd, env);
 	}
 	else
@@ -129,7 +127,8 @@ int	main(int argc, char **argv, char **env)
 	i = main_helper(argc, argv, &input_fd, &outfile_fd);
 	if (input_fd == -1 || outfile_fd == -1)
 		print_error("Error opening in/out  file!");
-	if (dup2(input_fd, STDIN_FILENO) == -1)
+	if (dup2(input_fd, STDIN_FILENO) == -1 && close_fds(input_fd, outfile_fd,
+			0))
 		print_error("Error dup2");
 	while (++i < argc - 1)
 	{

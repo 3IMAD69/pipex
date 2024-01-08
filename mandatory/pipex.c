@@ -6,7 +6,7 @@
 /*   By: idhaimy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 10:34:18 by idhaimy           #+#    #+#             */
-/*   Updated: 2024/01/08 12:13:11 by idhaimy          ###   ########.fr       */
+/*   Updated: 2024/01/08 15:40:46 by idhaimy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,11 @@ void	child1_func(int *fd_child, char **av, char **env)
 	close(fd_child[0]);
 	if (input_fd == -1 && close(fd_child[1]))
 		print_error("Error opening the input file!");
-	if (dup2(input_fd, STDIN_FILENO) == -1 && close(fd_child[1]))
+	if (dup2(input_fd, STDIN_FILENO) == -1 && close(fd_child[1])
+		&& close(input_fd))
 		print_error("Error dup2");
-	if (dup2(fd_child[1], STDOUT_FILENO) == -1 && close(fd_child[1]))
+	if (dup2(fd_child[1], STDOUT_FILENO) == -1 && close(fd_child[1])
+		&& close(input_fd))
 		print_error("Error dup2");
 	close(fd_child[1]);
 	close(input_fd);
@@ -70,9 +72,11 @@ void	child2_func(int *fd_child2, char **av, char **env)
 	close(fd_child2[1]);
 	if (outfile_fd == -1)
 		print_error("Error opening the input file!");
-	if (dup2(outfile_fd, STDOUT_FILENO) == -1 && close(fd_child2[0]))
+	if (dup2(outfile_fd, STDOUT_FILENO) == -1 && close(fd_child2[0])
+		&& close(outfile_fd))
 		print_error("Error dup2 first parent dup2");
-	if (dup2(fd_child2[0], STDIN_FILENO) == -1 && close(fd_child2[0]))
+	if (dup2(fd_child2[0], STDIN_FILENO) == -1 && close(fd_child2[0])
+		&& close(outfile_fd))
 		print_error("Error dup2 second parent dup2");
 	close(fd_child2[0]);
 	close(outfile_fd);

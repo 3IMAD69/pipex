@@ -6,7 +6,7 @@
 /*   By: idhaimy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 09:46:33 by idhaimy           #+#    #+#             */
-/*   Updated: 2024/01/08 14:50:33 by idhaimy          ###   ########.fr       */
+/*   Updated: 2024/01/08 15:31:20 by idhaimy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,5 @@ int		print_error(char *str);
 void	handle_command_helper(char **cmds, char **env);
 void	handle_command(char *arg, char **env);
 int		reopen_file(char *name);
-
+int		close_fds(int fd1, int fd2, int fd3);
 #endif
