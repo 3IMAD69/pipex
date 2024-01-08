@@ -1,7 +1,7 @@
 
 SRCM	= mandatory/pipex.c mandatory/pipex_utils.c mandatory/pipex_error.c
 
-SRCB	= pipex_bonus.c pipex_utils_bonus.c pipex_utils2_bonus.c pipex_error_bonus.c
+SRCB	= bonus/pipex_bonus.c bonus/pipex_utils_bonus.c bonus/pipex_utils2_bonus.c bonus/pipex_error_bonus.c
 
 OBJM	= ${SRCM:.c=.o}
 
